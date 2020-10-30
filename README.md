@@ -1,4 +1,4 @@
-# SOCIAL API
+# FAMBLAH API
 
 <p align="center">
     <img src="https://i.imgur.com/ldslPC7.png" width="120" >
@@ -8,20 +8,43 @@ This API is developed using the PHP Slim Framework, In this API you can use thea
 
 * **Create an account** ( *An email verification will be sent to user email address when they rgistered an account* )
 * **Login into account** ( *User can login into their account when they will successfully verified their account* )
-* **Send Email Verification Code** (*You can add a feature that user can send email verifcation code again to their email address* )
-* **Update Password** ( *User can update password, An email will also be send when they succesfully changed their password* )
 * **Forgot Password** ( *User can make a request that they have forgot their password, An OTP will be send to user's email address* )
 * **Reset Password** ( *User can reset password, by using the OTP which they have recieved, An email will also be send when they succesfully changed their password* )
+* **Update Password** ( *User can update password, An email will also be send when they succesfully changed their password* )
+* **Send Email Verification Code** (*You can add a feature that user can send email verifcation code again to their email address* )
+* **Verify Email Verification Code** (*To verify the email verification link* )
+* **Current User Information** ( *To view current Login users information e.g. Name, Email,Id. Need authuntication to get or view user informations* )
 * **Users List** ( *To view all usesrs information e.g. Name, Email,Id. Need authuntication to view users informations* )
+* **User Information** ( *To view specific user information by username e.g. Name, Email,Id. Need authuntication to view users informations* )
+* **Update User** ( *To update the user information e.g. Name, Username,Id,Image,etc...*) 
+* **Friends** ( *To get the friend list or the data of friend of specific user*)
+* **Image** ( *Get all feeds or posted images of a user*)
+* **Send Friend Request** ( *To send a friend request*) 
+* **Accept Friend Request** ( *To accept a friend request*)
+* **Cancel Friend Request** ( *To cancel a friend request*)
+* **Delete Friend** ( *To Delte an existing friend, or delete friendship with a users*)
 * **Post Feed** ( *To Post the Feed.* )
 * **Delete Feed** ( *To Delete the Feed* )
 * **Retrive All Feed** ( *To retrive all feed* )
 * **Retive All Feed Of Specific User** ( *You can retrive all post of a specific user by their username* )
-* **Retrive A Single Post Using** ( *You can retrive a signle feed using the feedId* )
+* **Retrive A Single Post** ( *You can retrive a signle feed using the feedId* )
 * **Like Feed** ( *To Like The Feed* )
-* **Dislike Feed** ( *To Dislike The Feed* )
+* **UnLike Feed** ( *To Unlike the liked feeds* )
+* **Report Feed** ( *To Report feed of user* )
 * **Post Feed Comment** ( *To Post Comments For The Feed* )
 * **Delete Feed Comment** ( *To Delete a comment of Feed* )
+* **Retrive All Comments Of Specific Feeds** ( *To retrive a comments list of specific post or feed*)
+* **Like Feed Comment** ( *Like feed comment*)
+* **Unlike Feed Comment** ( *Unlike the liked feed comment*)
+* **Delete Feed Comment** ( *Delete feed comment*)
+* **Notification** ( *Get all the notification of a specific user*)
+* **Notification Count** ( *To get all unseen or active notifications count*)
+* **Notification Seen** ( *Make all notification of specific user to inactive of seened notification*)
+* **Post Video** ( *To post the video*)
+* **Videos** ( *Get the all the videos*)
+* **Video By Video Id** ( *Get an specific video by the id of the video*)
+* **Verification Request** ( *Request for the the verification badge*)
+* **Contact** ( *user can contact your by writing a message*)
 
 
 ## Feauter Explanation
@@ -41,9 +64,9 @@ And you also need to make change in website section of `Constants.php` file.
 
 ```bash
 //Website Information
-define('WEBSITE_DOMAIN', 'http://socialapi.socialcodia.ml');               //your domain name
+define('WEBSITE_DOMAIN', 'http://famblah.cf/public/');               //your domain name
 define('WEBSITE_EMAIL', 'socialcodia@gmail.com');                    //your email address
-define('WEBSITE_EMAIL_PASSWORD', 'password');                        //your email password
+define('WEBSITE_EMAIL_PASSWORD', 'PASSWORD');                        //your email password
 define('WEBSITE_EMAIL_FROM', 'Social Codia');                        // your website name here
 define('WEBSITE_NAME', 'Social Codia');                              //your website name here
 define('WEBSITE_OWNER_NAME', 'Umair Farooqui');                      //your name, we will send this name with email verification mail.
@@ -58,15 +81,16 @@ define('JWT_SECRET_TOKEN','SocialCodia');                              //Your JW
 
 ## Register An Account
 
-To Create An Account, Accept only post request with three parameter
+To Create An Account, Accept only post request with four parameter
 * Name
+* Username
 * Email
 * Password
 
-The end point is to Create or Register an account is `createUser`
+The end point is to Create or Register an account is `register`
 
 <b>Demo Url</b> 
-* API Url <a href="http://socialapi.socialcodia.ml/createUser">http://socialapi.socialcodia.ml/createUser</a>
+* API Url <a href="http://socialapi.socialcodia.ml/register">http://socialapi.socialcodia.ml/register</a>
 * GUI Url <a href="http://socialui.socialcodia.ml/register">http://socialui.socialcodia.ml/register</a>
 
 An email verification will be send to user email address when they registered an account into the system.
@@ -113,7 +137,7 @@ To Login into Account, Accept only post request with two parameter
 
 The end point of login is `login`
 
-When user provide their username & password credential for login, the request will return their public information with **Token**
+When user provide their email & password credential for login, first the server will validate the information like, the email is valid or not if not valid then server will gues that this is an username not a email address so forward the username to databse server and request to give there email address, if the usename exist into our database server then it will give the email address, otherwise the server will give response that the username is not exist into database server or the invalid username, if the email is address is valid email address and email is not exist into our databse server the server will simply response that the email is not registered, if the credential is valid then the request will return their public information with **Token**
 
 The return infomration from the database will be like this.
 
@@ -122,11 +146,14 @@ The return infomration from the database will be like this.
     "error": false,
     "message": "Login Successfull",
     "user": {
-        "id": 173,
+        "id": 189,
         "name": "Social Codia",
+        "username": "SocialCodia",
         "email": "socialcodia@gmail.com",
-        "image": "http://socialapi.socialcodia.ml/public/uploads/5ee743ba282bc.jpg",
-        "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJzb2NpYWxjb2RpYS5uZXQiLCJpYXQiOjE1OTIyNDc5ODgsInVzZXJfaWQiOjE3M30.i_vxJ2AyrgLa5vL5L-FXKDRr5NVKDyDSHeZuccF7OT4"
+        "bio": "The Social Codia's Demo Bio",
+        "verified": 1,
+        "image": "http://famblah.cf/public/uploads/api/user.png",
+        "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJzb2NpYWxjb2RpYS5uZXQiLCJpYXQiOjE1OTczMjEyMzcsInVzZXJfaWQiOjE4OX0.ROK464H6G3nyWFZGtMESdSD2Vd9RQm7foaIzdTQo5J4"
     }
 }
 ```
@@ -134,6 +161,23 @@ The return infomration from the database will be like this.
 <b>Demo Url</b> 
 * API Url <a href="http://socialapi.socialcodia.ml/login">http://socialapi.socialcodia.ml/login</a>
 * GUI Url <a href="http://socialui.socialcodia.ml/login">http://socialui.socialcodia.ml/login</a>
+
+## VERIFY EMAIL VERIFICATIO CODE
+
+To verifiy the email verification link accept only get request with two parameters,
+* Email
+* Verification Code
+
+In the email verification link both parameter are encrypted the first parameter which email will be in encrypted format, and the second parameter which will the verification code.
+
+*Example of Email Verification Link
+    ```Bash
+    http://socialapi.socialcodia.ml/verifyEmail/wdpWwmufazmit4Py2aYd7MsocialcodiavknYY3bKxS7okyO9NgpYTmufazmiTGsocialcodiaE=/$2y$10$GWEv1cnJo2YdGbmo4mrwA.LNsocialcodiai4sj8.EdxIZuyWX3fjRHEiBrBX2S
+    ```
+1) Encrypted Email :`wdpWwmufazmit4Py2aYd7MsocialcodiavknYY3bKxS7okyO9NgpYTmufazmiTGsocialcodiaE=`
+2) Encrypted Verification Code : `$2y$10$GWEv1cnJo2YdGbmo4mrwA.LNsocialcodiai4sj8.EdxIZuyWX3fjRHEiBrBX2S`
+
+The end point for email verification is `verifyEmail`
 
 ## Forgot Password
 

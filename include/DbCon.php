@@ -9,7 +9,7 @@ class DbCon
         $this->con = new mysqli(DB_HOST,DB_USER,DB_PASS,DB_NAME);
         if(mysqli_connect_error())
         {
-            echo "Failed to connet database server";
+            echo "Failed to connect database server";
             return false;
         }
         return $this->con;

@@ -18,4 +18,5 @@
 
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteRule ^ index.php [QSA,L]
+  RewriteRule ^admin?$ admin.php
 </IfModule>
